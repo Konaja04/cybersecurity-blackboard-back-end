@@ -1,0 +1,19 @@
+# Ajusta "app" al nombre que elijas al correr `fly launch`
+app = "blackboard-backend"
+primary_region = "qro"
+
+[build]
+
+[deploy]
+  release_command = "python manage.py migrate"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
