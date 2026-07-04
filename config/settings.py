@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['.fly.dev', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.fly.dev', '.vercel.app', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -156,6 +156,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://*.fly.dev',
+    'https://*.vercel.app',
 ]
 if os.environ.get('FRONTEND_URL'):
     CSRF_TRUSTED_ORIGINS.append(os.environ['FRONTEND_URL'])
