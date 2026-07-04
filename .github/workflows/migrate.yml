@@ -16,15 +16,25 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
+      - name: Normalizar DATABASE_URL
+        env:
+          RAW_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          CLEAN=$(echo "$RAW_URL" | grep -oE "postgres(ql)?://[^'\" ]+" | head -1)
+          if [ -z "$CLEAN" ]; then
+            echo "::error::El secreto DATABASE_URL esta vacio o no contiene una URL postgresql:// valida"
+            exit 1
+          fi
+          echo "DATABASE_URL=$CLEAN" >> "$GITHUB_ENV"
+          echo "URL detectada correctamente (host: $(echo "$CLEAN" | sed -E 's|.*@([^/]+)/.*|\1|'))"
+
       - name: Aplicar migraciones
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SECRET_KEY: ci-only
         run: python manage.py migrate --noinput
 
       - name: Crear superusuario (si no existe)
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SECRET_KEY: ci-only
           DJANGO_SUPERUSER_USERNAME: admin
           DJANGO_SUPERUSER_EMAIL: admin@example.com
