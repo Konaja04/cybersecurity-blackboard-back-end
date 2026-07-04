@@ -20,6 +20,8 @@ jobs:
         env:
           RAW_URL: ${{ secrets.DATABASE_URL }}
         run: |
+          echo "Diagnostico: el secreto tiene ${#RAW_URL} caracteres"
+          echo "Primeros 15 caracteres: '$(echo "$RAW_URL" | cut -c1-15)'"
           CLEAN=$(echo "$RAW_URL" | grep -oE "postgres(ql)?://[^'\" ]+" | head -1)
           if [ -z "$CLEAN" ]; then
             echo "::error::El secreto DATABASE_URL esta vacio o no contiene una URL postgresql:// valida"
