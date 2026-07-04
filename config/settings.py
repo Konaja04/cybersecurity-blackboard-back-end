@@ -145,6 +145,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:4173',
     'http://127.0.0.1:5173',
+    'https://konaja04.github.io',  # frontend en GitHub Pages
 ]
 # URL del frontend en producción (ej: https://mi-app.vercel.app)
 if os.environ.get('FRONTEND_URL'):
@@ -157,6 +158,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://*.fly.dev',
     'https://*.vercel.app',
+    'https://konaja04.github.io',
 ]
 if os.environ.get('FRONTEND_URL'):
     CSRF_TRUSTED_ORIGINS.append(os.environ['FRONTEND_URL'])
