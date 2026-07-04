@@ -1,0 +1,32 @@
+name: Migrar base de datos (Neon)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Aplicar migraciones
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SECRET_KEY: ci-only
+        run: python manage.py migrate --noinput
+
+      - name: Crear superusuario (si no existe)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SECRET_KEY: ci-only
+          DJANGO_SUPERUSER_USERNAME: admin
+          DJANGO_SUPERUSER_EMAIL: admin@example.com
+          DJANGO_SUPERUSER_PASSWORD: ${{ secrets.DJANGO_SUPERUSER_PASSWORD }}
+        run: python manage.py createsuperuser --noinput || echo "El superusuario ya existe, continuando"
